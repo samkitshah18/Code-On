@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { IconButton, Avatar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import SaveIcon from '@mui/icons-material/Save';
+import { signup, login, logout, useAuth, createFile, fetchFile, getDocs } from "../../firebase";
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/theme-dracula";
@@ -18,10 +20,12 @@ import "brace/theme/github";
 import "./Chat.css";
 import axios from "../../axios";
 
-const Chat = () => {
-  const [codeText, setCodeText] = useState("");
+const Chat = ({ currentItem }) => {
+  const [codeText, setCodeText] = useState(currentItem.code);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [fileName, setFileName] = useState("");
+  const currentUser = useAuth();
 
   const available_languages = [];
 
@@ -41,10 +45,48 @@ const Chat = () => {
       });
   };
 
+  useEffect(() => {
+
+    console.log("From chat: ", currentItem)
+    setCodeText(currentItem.code)
+
+  }, [currentItem])
+
   const onChange = (new_value) => {
     console.log("change", new_value);
     setCodeText(new_value);
   };
+
+  const saveFile = () => {
+    console.log(codeText)
+    console.log(currentUser);
+    try { createFile(currentUser.email, codeText, fileName) }
+    catch (e) {
+      alert(e);
+    }
+  }
+
+  async function fetchcode() {
+    console.log(codeText)
+    try {
+      const fcode = await fetchFile(currentUser.email, fileName)
+      console.log(fcode.data())
+    }
+    catch (e) {
+      alert(e);
+    }
+  }
+
+
+  // export async function fetchDocs(){
+  //   try {
+  //     const dataFiles = await getDocs(currentUser.email)
+  //     return dataFiles
+  //   }
+  //   catch(e){
+  //     alert(e);
+  //   }
+  // }
 
   return (
     <div className="chat">
@@ -52,11 +94,14 @@ const Chat = () => {
         <Avatar />
 
         <div className="chat__headerInfo">
-          <h3>CodeFile name</h3>
+          <input className="title" value={currentItem?.name || ""} onChange={(e) => setFileName(e.target.value)}></input>
           {/* <p>Last seen at...</p> */}
         </div>
 
         <div className="chat__headerRight">
+          <IconButton>
+            <SaveIcon onClick={saveFile} />
+          </IconButton>
           <IconButton>
             <PlayArrowIcon onClick={sendCode} />
           </IconButton>
@@ -70,6 +115,7 @@ const Chat = () => {
         <AceEditor
           mode="java"
           theme="github"
+          value={codeText}
           onChange={onChange}
           name="UNIQUE_ID_OF_DIV"
           editorProps={{

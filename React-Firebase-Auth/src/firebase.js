@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { addDoc, collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,10 +19,11 @@ const firebaseConfig = {
 // Initialize Firebase
 // eslint-disable-next-line 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore();
 const auth = getAuth();
 
-export function signup(email, password) {
-  return createUserWithEmailAndPassword(auth, email, password);
+export function signup(email, password, name) {
+  return createUserWithEmailAndPassword(auth, email, password) && addUser(email, password, name)
 }
 
 export function login(email, password) {
@@ -31,9 +34,30 @@ export function logout() {
   return signOut(auth);
 }
 
+export function addUser(email, password, name) {
+
+  const user = doc(db, `users/${email}`)
+  async function createUser() {
+    const docData = {
+      name: name,
+      email: email,
+      password: password
+    };
+    const res = await setDoc(user, docData);
+    return res
+  }
+  const resp = createUser();
+  return resp
+}
+// addDoc(collection(db, "users/yashpatel"), {
+//   name: name,
+//   email: email,
+//   password: password
+// });
+
 // Custom Hook
 export function useAuth() {
-  const [ currentUser, setCurrentUser ] = useState();
+  const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, user => setCurrentUser(user));
@@ -42,3 +66,30 @@ export function useAuth() {
 
   return currentUser;
 }
+
+export function createFile(email, codeText, fileName) {
+  const script = doc(db, `users/${email}/scripts/${fileName}`)
+  async function createFile() {
+    const docData = {
+      code: codeText,
+      fileName: fileName
+    };
+    setDoc(script, docData);
+  }
+  createFile();
+}
+
+export function fetchFile(email, fileName) {
+  const docRef = doc(db, `users/${email}/scripts/${fileName}`)
+  const docSnap = getDoc(docRef);
+  return docSnap
+}
+
+export function getDocs(email) {
+  const querySnapshot = getDocs(collection(db, `users/${email}/scripts`));
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    console.log(doc.id, " => ", doc.data());
+  });
+}
+

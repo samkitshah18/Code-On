@@ -8,16 +8,17 @@ const Login = () => {
 	const currentUser = useAuth();
 
 	const emailRef = useRef();
+	const nameRef = useRef();
 	const passwordRef = useRef();
 	const navigate = useNavigate();
 
 	async function handleSignup() {
 		setLoading(true);
 		try {
-			await signup(emailRef.current.value, passwordRef.current.value);
+			await signup(emailRef.current.value, passwordRef.current.value, nameRef.current.value);
 			navigate("/code-on");
-		} catch {
-			alert("Error!");
+		} catch(e) {
+			alert(e);
 		}
 		setLoading(false);
 	}
@@ -40,6 +41,7 @@ const Login = () => {
 			<div>Currently logged in as: {currentUser?.email} </div>
 
 			<div id="fields">
+				<input ref={nameRef} placeholder="Name" />
 				<input ref={emailRef} placeholder="Email" />
 				<input ref={passwordRef} type="password" placeholder="Password" />
 			</div>

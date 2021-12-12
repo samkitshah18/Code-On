@@ -2,12 +2,12 @@ import { Avatar } from "@mui/material";
 import React from "react";
 import "./SidebarChat.css";
 
-function SidebarChat() {
+function SidebarChat({ item, setCurrentItem }) {
   return (
-    <div className="sidebarChat">
+    <div className="sidebarChat" onClick={() => { console.log(item.code); setCurrentItem(item) }}>
       <Avatar />
       <div className="sidebarChat__info">
-        <p>CodeFile Name</p>
+        <p>{item.name}</p>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Sidebar.css";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -8,20 +8,26 @@ import { logout, useAuth } from "../../firebase";
 import { IconButton, Avatar } from "@mui/material";
 import SidebarChat from "../sidebarChat/SidebarChat";
 
-function Sidebar() {
+function Sidebar({ allCodes, setCurrentItem}) {
   const [loading, setLoading] = useState(false);
-	const navigate = useNavigate();
+  const [files, setFiles] = useState(false);
+  const navigate = useNavigate();
 
-	async function handleLogout() {
-		setLoading(true);
-		try {
-			await logout();
+  async function handleLogout() {
+    setLoading(true);
+    try {
+      await logout();
       navigate("/login");
-		} catch {
-			alert("Error!");
-		}
-		setLoading(false);
-	}
+    } catch {
+      alert("Error!");
+    }
+    setLoading(false);
+  }
+
+  
+  useEffect(() => {
+    // setFiles
+  }, []);
 
 
   return (
@@ -33,16 +39,22 @@ function Sidebar() {
             <AddCircleIcon />
           </IconButton>
           <IconButton>
-            <LogoutIcon onClick = {handleLogout}/>
+            <LogoutIcon onClick={handleLogout} />
           </IconButton>
         </div>
       </div>
 
       <div className="sidebar__chats">
         {/* {rooms.map((room) => ( */}
-        <SidebarChat />
-        <SidebarChat />
-        <SidebarChat />
+        {
+          allCodes.map(item => {
+            return (
+              <SidebarChat item={item} setCurrentItem={setCurrentItem} />
+            )
+          })
+        }
+
+
         {/* ))} */}
       </div>
     </div>
