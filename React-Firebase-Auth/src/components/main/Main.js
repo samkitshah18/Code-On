@@ -1,6 +1,5 @@
-import { getDocs } from 'firebase/firestore';
 import { useState, useEffect } from 'react'
-import { useAuth } from '../../firebase';
+import { getallDocs, useAuth } from '../../firebase';
 import Chat from "../chat/Chat";
 import Sidebar from "../sidebar/Sidebar";
 import "./Main.css";
@@ -9,22 +8,20 @@ const Main = () => {
 	const [currentCode, setCurrentCode] = useState("");
 	const [allCodes, setAllCodes] = useState([])
 	const [currentItem, setCurrentItem] = useState("")
-	const [currentUser, setCurrentUser] = useState(null)
+	const currentUser = useAuth();
 
-	console.log("out: ", currentUser);
-	const data = [{
+
+	const [data, setData] = useState([{
 		code: "print(1)",
 		name: "1"
 	}, {
 		code: "print(2)",
 		name: "2"
-	}]
+	}])
 
 	function getdocs() {
 		try {
-			// console.log("currentuser", currentUser)
-			// console.log("user email: ", currentUser.email)
-			return getDocs("yashp@gmail.com")
+			return getallDocs("yashp@gmail.com")
 		}
 		catch (e) {
 			alert(e);
@@ -32,10 +29,14 @@ const Main = () => {
 	}
 
 	useEffect(() => {
-
-		getdocs()
-		setAllCodes(data)
-		setCurrentItem(data[0])
+		const fetchData = async () => {
+			const data = await getallDocs("yashp@gmail.com");
+			console.log("Samkit shah", data)
+			setData(data);
+			setAllCodes(data)
+			setCurrentItem(data[0])
+		}
+		fetchData();
 	}, [])
 	return (
 		<div className="app">

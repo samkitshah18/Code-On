@@ -66,24 +66,13 @@ const Chat = ({ currentItem }) => {
     }
   }
 
-  async function fetchcode() {
-    console.log(codeText)
-    try {
-      const fcode = await fetchFile(currentUser.email, fileName)
-      console.log(fcode.data())
-    }
-    catch (e) {
-      alert(e);
-    }
-  }
-
-
-  // export async function fetchDocs(){
+  // async function fetchcode() {
+  //   console.log(codeText)
   //   try {
-  //     const dataFiles = await getDocs(currentUser.email)
-  //     return dataFiles
+  //     const fcode = await fetchFile(currentUser.email, fileName)
+  //     console.log(fcode.data())
   //   }
-  //   catch(e){
+  //   catch (e) {
   //     alert(e);
   //   }
   // }

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-import { addDoc, collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 
 
 // Your web app's Firebase configuration
@@ -85,11 +85,17 @@ export function fetchFile(email, fileName) {
   return docSnap
 }
 
-export function getDocs(email) {
-  const querySnapshot = getDocs(collection(db, `users/${email}/scripts`));
+export async function getallDocs(email) {
+  let arr = []
+  const querySnapshot = await getDocs(collection(db, `users/${email}/scripts`));
+  console.log(querySnapshot)
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
+    arr = [...arr, { name: doc.id, code: doc.data().code }]
+    // console.log(doc.id, " => ", doc.data());
   });
+  console.log(arr);
+  return arr;
 }
+
 
