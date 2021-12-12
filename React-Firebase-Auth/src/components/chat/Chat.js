@@ -17,6 +17,12 @@ import "ace-builds/src-noconflict/mode-kotlin";
 import "ace-builds/src-noconflict/mode-swift";
 import "brace/theme/github";
 
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 import "./Chat.css";
 import axios from "../../axios";
 
@@ -25,9 +31,8 @@ const Chat = ({ currentItem }) => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [fileName, setFileName] = useState("");
+  const [language, setLanguage] = useState("python3");
   const currentUser = useAuth();
-
-  const available_languages = [];
 
   const sendCode = async (e) => {
     e.preventDefault();
@@ -35,7 +40,7 @@ const Chat = ({ currentItem }) => {
     await axios
       .post("http://localhost:9000/executeItBastard", {
         code: codeText,
-        lang: "python3",
+        lang: language,
         input: input,
       })
       .then((response) => {
@@ -66,7 +71,7 @@ const Chat = ({ currentItem }) => {
     }
   }
 
-  // async function fetchcode() {
+  // a  sync function fetchcode() {
   //   console.log(codeText)
   //   try {
   //     const fcode = await fetchFile(currentUser.email, fileName)
@@ -77,15 +82,36 @@ const Chat = ({ currentItem }) => {
   //   }
   // }
 
+  const handleChange = (e) => {
+    setLanguage(e.target.value);
+    console.log("languages: ", language);
+  }
+
   return (
     <div className="chat">
       <div className="chat__header">
-        <Avatar />
 
         <div className="chat__headerInfo">
           <input className="title" value={currentItem?.name || ""} onChange={(e) => setFileName(e.target.value)}></input>
           {/* <p>Last seen at...</p> */}
         </div>
+
+        <Box sx={{ minWidth: 120 }}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Languge</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={language}
+              label="Language"
+              onChange={handleChange}
+            >
+              <MenuItem value={"python3"}>Python</MenuItem>
+              <MenuItem value={"cpp17"}>C++</MenuItem>
+              <MenuItem value={"java"}>Java</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
 
         <div className="chat__headerRight">
           <IconButton>
