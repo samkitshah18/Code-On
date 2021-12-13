@@ -15,9 +15,12 @@ const Login = () => {
 	async function handleSignup() {
 		setLoading(true);
 		try {
-			await signup(emailRef.current.value, passwordRef.current.value, nameRef.current.value);
+			const loginData = await signup(emailRef.current.value, passwordRef.current.value, nameRef.current.value);
+			console.log("Signup: ", loginData);
+			const userEmail = loginData.user.email
+			localStorage.setItem("userInfo", JSON.stringify(userEmail))
 			navigate("/code-on");
-		} catch(e) {
+		} catch (e) {
 			alert(e);
 		}
 		setLoading(false);
@@ -26,7 +29,10 @@ const Login = () => {
 	async function handleLogin() {
 		setLoading(true);
 		try {
-			await login(emailRef.current.value, passwordRef.current.value);
+			const loginData = await login(emailRef.current.value, passwordRef.current.value);
+			console.log("Login: ", loginData);
+			const userEmail = loginData.user.email
+			localStorage.setItem("userInfo", JSON.stringify(userEmail))
 			navigate("/code-on");
 		} catch {
 			alert("Error!");

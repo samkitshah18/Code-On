@@ -1,9 +1,10 @@
 import React from 'react'
+import { logout } from './firebase'
 
 const Logout = () => {
 	return (
 		<div>
-			<h1> Logout</h1>
+			<button onClick={logout} />
 		</div>
 	)
 }

@@ -4,7 +4,7 @@ import { IconButton, Avatar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SaveIcon from '@mui/icons-material/Save';
-import { signup, login, logout, useAuth, createFile, fetchFile, getDocs } from "../../firebase";
+import { signup, login, logout, useAuth, createFile, fetchFile, getDocs, deleteFile } from "../../firebase";
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/theme-dracula";
@@ -26,11 +26,10 @@ import Select from '@mui/material/Select';
 import "./Chat.css";
 import axios from "../../axios";
 
-const Chat = ({ currentItem }) => {
+const Chat = ({ currentItem, setCurrentItem }) => {
   const [codeText, setCodeText] = useState(currentItem.code);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [fileName, setFileName] = useState("");
   const [language, setLanguage] = useState("python3");
   const currentUser = useAuth();
 
@@ -62,25 +61,22 @@ const Chat = ({ currentItem }) => {
     setCodeText(new_value);
   };
 
-  const saveFile = () => {
+  const saveFile = async () => {
     console.log(codeText)
     console.log(currentUser);
-    try { createFile(currentUser.email, codeText, fileName) }
+    try { createFile(currentUser.email, currentItem.code, currentItem.name); }
     catch (e) {
       alert(e);
     }
   }
 
-  // a  sync function fetchcode() {
-  //   console.log(codeText)
-  //   try {
-  //     const fcode = await fetchFile(currentUser.email, fileName)
-  //     console.log(fcode.data())
-  //   }
-  //   catch (e) {
-  //     alert(e);
-  //   }
-  // }
+  const deleteCode = () => {
+    try { deleteFile(currentUser.email, currentItem.name) }
+    catch (e) {
+      alert(e);
+    }
+  }
+
 
   const handleChange = (e) => {
     setLanguage(e.target.value);
@@ -92,7 +88,7 @@ const Chat = ({ currentItem }) => {
       <div className="chat__header">
 
         <div className="chat__headerInfo">
-          <input className="title" value={currentItem?.name || ""} onChange={(e) => setFileName(e.target.value)}></input>
+          <input className="title" value={currentItem?.name || ""} onChange={(e) => setCurrentItem({ ...currentItem, name: e.target.value })}></input>
           {/* <p>Last seen at...</p> */}
         </div>
 
@@ -115,13 +111,15 @@ const Chat = ({ currentItem }) => {
 
         <div className="chat__headerRight">
           <IconButton>
-            <SaveIcon onClick={saveFile} />
+            <SaveIcon onClick={() => {
+              saveFile();
+            }} />
           </IconButton>
           <IconButton>
             <PlayArrowIcon onClick={sendCode} />
           </IconButton>
           <IconButton>
-            <DeleteIcon />
+            <DeleteIcon onClick={deleteCode} />
           </IconButton>
         </div>
       </div>

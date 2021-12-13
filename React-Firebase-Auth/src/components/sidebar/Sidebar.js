@@ -8,7 +8,7 @@ import { logout, useAuth } from "../../firebase";
 import { IconButton, Avatar } from "@mui/material";
 import SidebarChat from "../sidebarChat/SidebarChat";
 
-function Sidebar({ allCodes, setCurrentItem}) {
+function Sidebar({ allCodes, setCurrentItem, setAllCodes }) {
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState(false);
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ function Sidebar({ allCodes, setCurrentItem}) {
     setLoading(true);
     try {
       await logout();
+      localStorage.setItem("userInfo", null)
       navigate("/login");
     } catch {
       alert("Error!");
@@ -24,10 +25,8 @@ function Sidebar({ allCodes, setCurrentItem}) {
     setLoading(false);
   }
 
-  
-  useEffect(() => {
-    // setFiles
-  }, []);
+
+  const newItem = { name: "Untitled", code: "" }
 
 
   return (
@@ -36,7 +35,7 @@ function Sidebar({ allCodes, setCurrentItem}) {
         <Avatar src="https://octodex.github.com/images/yogitocat.png" />
         <div className="sidebar__headerRight">
           <IconButton>
-            <AddCircleIcon />
+            <AddCircleIcon onClick={() => { setAllCodes([newItem, ...allCodes]); setCurrentItem(newItem) }} />
           </IconButton>
           <IconButton>
             <LogoutIcon onClick={handleLogout} />

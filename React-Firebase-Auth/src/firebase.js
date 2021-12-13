@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 
 
 // Your web app's Firebase configuration
@@ -98,4 +98,21 @@ export async function getallDocs(email) {
   return arr;
 }
 
+export function getInfo() {
+  let user = getAuth().currentUser
+  console.log("current user", user)
+  return user.email;
+}
+
+
+export function deleteFile(email, fileName) {
+  console.log("filename", fileName)
+  try {
+    const script = doc(db, `users/${email}/scripts/${fileName}`)
+    deleteDoc(db, script);
+  }
+  catch (e) {
+    console.log(e, "errrr")
+  }
+}
 
