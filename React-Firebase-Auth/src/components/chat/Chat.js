@@ -33,11 +33,11 @@ const Chat = ({ currentItem, setCurrentItem }) => {
   const [language, setLanguage] = useState("python3");
   const currentUser = useAuth();
 
-  const sendCode = async (e) => {
+  const compile = async (e) => {
     e.preventDefault();
 
     await axios
-      .post("http://localhost:9000/executeItBastard", {
+      .post("http://localhost:9000/executeIt", {
         code: codeText,
         lang: language,
         input: input,
@@ -121,7 +121,7 @@ const Chat = ({ currentItem, setCurrentItem }) => {
             }} />
           </IconButton>
           <IconButton>
-            <PlayArrowIcon onClick={sendCode} />
+            <PlayArrowIcon onClick={compile} />
           </IconButton>
           <IconButton>
             <DeleteIcon onClick={deleteCode} />

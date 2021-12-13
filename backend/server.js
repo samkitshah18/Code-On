@@ -35,7 +35,7 @@ app.get("/", async (req, res) => {
 });
 
 // @execute code file
-app.post("/executeItBastard", async (req, res) => {
+app.post("/executeIt", async (req, res) => {
   const { code, input, lang } = req.body;
   console.log({ code, input, lang });
   const program_file = {

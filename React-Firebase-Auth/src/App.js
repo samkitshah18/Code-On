@@ -10,7 +10,7 @@ import Main from './components/main/Main';
 export default function App() {
   return (
     <div id="main">
-
+      <h1 className="titlee"> <pre>  Hello! This is Code-On</pre></h1 >
       <BrowserRouter>
         <Routes>
           <Route path="/login" caseSensitive={false} element={<Login />}></Route>
@@ -21,6 +21,6 @@ export default function App() {
 
 
 
-    </div>
+    </div >
   );
 }
