@@ -45,12 +45,12 @@ function Sidebar({ allCodes, setCurrentItem, setAllCodes }) {
 
       <div className="sidebar__chats">
         {/* {rooms.map((room) => ( */}
-        {
+        {allCodes ?
           allCodes.map(item => {
             return (
               <SidebarChat item={item} setCurrentItem={setCurrentItem} />
             )
-          })
+          }) : "Empty"
         }
 
 

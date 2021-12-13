@@ -54,10 +54,16 @@
   background-color: white;
   padding: 30px;
   overflow: scroll;
+  font-size: medium;
+}
+
+.editor {
+  height: 100%;
+  width: 100%;
 }
 
 textarea {
-  height: 180px;
+  height: 130px;
   width: 180px;
 }
 
@@ -116,4 +122,8 @@ textarea {
 .chat__footer > .MuiSvgIcon-root {
   color: grey;
   padding: 10px;
+}
+
+.foobar {
+  font-size: medium;
 }

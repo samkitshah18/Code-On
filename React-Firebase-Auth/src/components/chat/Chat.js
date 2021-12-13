@@ -27,7 +27,7 @@ import "./Chat.css";
 import axios from "../../axios";
 
 const Chat = ({ currentItem, setCurrentItem }) => {
-  const [codeText, setCodeText] = useState(currentItem.code);
+  const [codeText, setCodeText] = useState(currentItem ? currentItem.code : 'Create new file !');
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("python3");
@@ -52,7 +52,9 @@ const Chat = ({ currentItem, setCurrentItem }) => {
   useEffect(() => {
 
     console.log("From chat: ", currentItem)
-    setCodeText(currentItem.code)
+    if (currentItem) {
+      setCodeText(currentItem.code)
+    }
 
   }, [currentItem])
 
@@ -64,7 +66,10 @@ const Chat = ({ currentItem, setCurrentItem }) => {
   const saveFile = async () => {
     console.log(codeText)
     console.log(currentUser);
-    try { createFile(currentUser.email, currentItem.code, currentItem.name); }
+    try {
+      console.log(currentItem.code)
+      createFile(currentUser.email, codeText, currentItem.name);
+    }
     catch (e) {
       alert(e);
     }
@@ -130,6 +135,7 @@ const Chat = ({ currentItem, setCurrentItem }) => {
           theme="github"
           value={codeText}
           onChange={onChange}
+          className="editor"
           name="UNIQUE_ID_OF_DIV"
           editorProps={{
             $blockScrolling: true,

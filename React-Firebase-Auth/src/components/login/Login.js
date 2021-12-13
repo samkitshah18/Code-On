@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { signup, login, logout, useAuth } from "../../firebase";
+import { signup, login, logout, useAuth, addUser } from "../../firebase";
 
 const Login = () => {
 	const [loading, setLoading] = useState(false);
@@ -16,6 +16,7 @@ const Login = () => {
 		setLoading(true);
 		try {
 			const loginData = await signup(emailRef.current.value, passwordRef.current.value, nameRef.current.value);
+			addUser(emailRef.current.value, passwordRef.current.value, nameRef.current.value);
 			console.log("Signup: ", loginData);
 			const userEmail = loginData.user.email
 			localStorage.setItem("userInfo", JSON.stringify(userEmail))

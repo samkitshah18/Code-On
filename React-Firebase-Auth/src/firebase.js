@@ -23,7 +23,7 @@ const db = getFirestore();
 const auth = getAuth();
 
 export function signup(email, password, name) {
-  return createUserWithEmailAndPassword(auth, email, password) && addUser(email, password, name)
+  return createUserWithEmailAndPassword(auth, email, password)
 }
 
 export function login(email, password) {
@@ -109,7 +109,7 @@ export function deleteFile(email, fileName) {
   console.log("filename", fileName)
   try {
     const script = doc(db, `users/${email}/scripts/${fileName}`)
-    deleteDoc(db, script);
+    console.log(deleteDoc(script));
   }
   catch (e) {
     console.log(e, "errrr")
